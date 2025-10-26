@@ -1,0 +1,35 @@
+[
+  {
+    "CertID": "001",
+    "RecipientName": "Ada Lovelace",
+    "CourseTitle": "Intro to Cryptographic Linking",
+    "DateIssued": "2025-10-18",
+    "PreviousHash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "CurrentHash": "756310b0794780ea93eff2e7e6c9029c5fe858a1d31bd25f8d999d3be77bf1c4",
+    "VerificationURL": "https://your-domain.com/certificate-auth/?hash=756310b0794780ea93eff2e7e6c9029c5fe858a1d31bd25f8d999d3be77bf1c4",
+    "QRCodeURL": "https://api.qrserver.com/v1/create-qr-code/?data=https%3A%2F%2Fyour-domain.com%2Fcertificate-auth%2F%3Fhash%3D756310b0794780ea93eff2e7e6c9029c5fe858a1d31bd25f8d999d3be77bf1c4&size=180x180",
+    "QRCodePath": "data/qrcodes\\001.png"
+  },
+  {
+    "CertID": "002",
+    "RecipientName": "Alan Turing",
+    "CourseTitle": "Intro to Cryptographic Linking",
+    "DateIssued": "2025-10-18",
+    "PreviousHash": "756310b0794780ea93eff2e7e6c9029c5fe858a1d31bd25f8d999d3be77bf1c4",
+    "CurrentHash": "2d13b1543295b77a0716e3e95998298a4613c76d3494ff67d4b8a0725174c167",
+    "VerificationURL": "https://your-domain.com/certificate-auth/?hash=2d13b1543295b77a0716e3e95998298a4613c76d3494ff67d4b8a0725174c167",
+    "QRCodeURL": "https://api.qrserver.com/v1/create-qr-code/?data=https%3A%2F%2Fyour-domain.com%2Fcertificate-auth%2F%3Fhash%3D2d13b1543295b77a0716e3e95998298a4613c76d3494ff67d4b8a0725174c167&size=180x180",
+    "QRCodePath": "data/qrcodes\\002.png"
+  },
+  {
+    "CertID": "003",
+    "RecipientName": "Grace Hopper",
+    "CourseTitle": "Intro to Cryptographic Linking",
+    "DateIssued": "2025-10-18",
+    "PreviousHash": "2d13b1543295b77a0716e3e95998298a4613c76d3494ff67d4b8a0725174c167",
+    "CurrentHash": "4f6a14972c90ca4b5171b6a4a1182196a9affd2fe368ae98e85b57c0a530b209",
+    "VerificationURL": "https://your-domain.com/certificate-auth/?hash=4f6a14972c90ca4b5171b6a4a1182196a9affd2fe368ae98e85b57c0a530b209",
+    "QRCodeURL": "https://api.qrserver.com/v1/create-qr-code/?data=https%3A%2F%2Fyour-domain.com%2Fcertificate-auth%2F%3Fhash%3D4f6a14972c90ca4b5171b6a4a1182196a9affd2fe368ae98e85b57c0a530b209&size=180x180",
+    "QRCodePath": "data/qrcodes\\003.png"
+  }
+]

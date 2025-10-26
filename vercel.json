@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "routes": [
+    { "src": "/data/(.*)", "dest": "/web/data/$1" },
+    { "src": "/(.*)", "dest": "/web/$1" }
+  ]
+}

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#1e3a8a" />
+  <title>Certificate Verification</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header" role="banner">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">CA</div>
+      <div>Certificate Auth</div>
+    </div>
+  </header>
+
+  <main class="container" role="main">
+    <h1>Verify a Certificate</h1>
+    <p class="lead">Paste the certificate's <code>CurrentHash</code> or open via a QR link.</p>
+
+    <div class="verify-box">
+      <label for="hashInput" class="sr-only">CurrentHash (64 hex characters)</label>
+      <input id="hashInput" type="text" placeholder="Paste CurrentHash here" aria-label="CurrentHash (64 hex characters)" />
+      <button id="verifyBtn" class="button" aria-label="Verify certificate">Verify</button>
+    </div>
+
+    <div id="result" class="result" aria-live="polite"></div>
+  </main>
+
+  <footer class="site-footer container" role="contentinfo">
+    <p class="lead">This site recomputes the certificate hash and checks the chain for integrity.</p>
+  </footer>
+
+  <script src="verify.js"></script>
+</body>
+</html>
