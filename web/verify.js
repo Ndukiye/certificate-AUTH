@@ -1,3 +1,17 @@
+/**
+ * Certificate Verification System - Frontend JavaScript
+ * 
+ * This script handles the verification of certificates by:
+ * 1. Loading certificate data and hash index from JSON files
+ * 2. Verifying certificate hashes against the blockchain-like chain
+ * 3. Displaying verification results with certificate details
+ * 4. Providing download and sharing functionality
+ */
+
+/**
+ * Loads certificate data and hash index from JSON files
+ * @returns {Promise<Object>} Object containing certificates array and hash lookup index
+ */
 async function loadData() {
   const [certsRes, indexRes] = await Promise.all([
     fetch('data/certs.json'),
@@ -11,6 +25,11 @@ async function loadData() {
   return { certs, index };
 }
 
+/**
+ * Computes SHA-256 hash of a string and returns it as hexadecimal
+ * @param {string} str - Input string to hash
+ * @returns {Promise<string>} Hexadecimal SHA-256 hash
+ */
 async function sha256Hex(str) {
   const enc = new TextEncoder();
   const data = enc.encode(str);
@@ -23,19 +42,41 @@ async function sha256Hex(str) {
   return hex;
 }
 
+/**
+ * Combines certificate fields into a single string for hashing
+ * @param {Object} rec - Certificate record
+ * @returns {string} Concatenated fields string
+ */
 function concatFields(rec) {
   return `${rec.CertID}|${rec.RecipientName}|${rec.CourseTitle}|${rec.DateIssued}|${rec.PreviousHash}`;
 }
 
+/**
+ * Validates that a string is a 64-character hexadecimal value (SHA-256 hash)
+ * @param {string} s - String to validate
+ * @returns {boolean} True if string is a valid 64-character hex value
+ */
 function isHex64(s) {
   const clean = (s || '').trim();
   return /^[0-9a-f]{64}$/.test(clean);
 }
 
+/**
+ * Updates the result container with HTML content
+ * @param {HTMLElement} el - Element to update
+ * @param {string} content - HTML content to insert
+ */
 function renderResult(el, content) {
   el.innerHTML = content;
 }
 
+/**
+ * Formats a long hash for display by truncating the middle section
+ * @param {string} hash - Hash to format
+ * @param {number} visibleStart - Number of characters to show at start
+ * @param {number} visibleEnd - Number of characters to show at end
+ * @returns {string} Formatted hash with ellipsis in the middle
+ */
 function formatHash(hash, visibleStart = 10, visibleEnd = 6) {
   const clean = (hash || '').trim();
   if (!clean) return '';
@@ -43,16 +84,23 @@ function formatHash(hash, visibleStart = 10, visibleEnd = 6) {
   return `${clean.slice(0, visibleStart)}...${clean.slice(-visibleEnd)}`;
 }
 
-// Download certificate helper: tries direct file, falls back to print
+/**
+ * Downloads a certificate PDF by CertID or falls back to printing the current page
+ * @param {string} certId - Certificate ID to download
+ * @returns {Promise<void>}
+ */
 async function downloadCertificateById(certId) {
   const fileName = certId ? `${certId}.pdf` : 'certificate.pdf';
   const candidates = [
     `data/certificates/${fileName}`
   ];
+  
+  // Try to download the PDF file directly
   for (const url of candidates) {
     try {
       const res = await fetch(url, { method: 'HEAD' });
       if (res.ok) {
+        // Create and trigger a download link
         const a = document.createElement('a');
         a.href = url;
         a.download = fileName;
@@ -65,6 +113,7 @@ async function downloadCertificateById(certId) {
       // ignore and continue to fallback
     }
   }
+  
   // Fallback: print current result card as PDF
   window.print();
 }
@@ -128,6 +177,20 @@ function renderFailure(el, message, rec) {
   `;
 }
 
+/**
+ * Verifies a certificate by its hash against the certificate chain
+ * @param {string} hash - SHA-256 hash of the certificate to verify
+ * @param {Object} data - Object containing certificates and hash index
+ * @param {HTMLElement} el - Element to render results into
+ * @returns {Promise<void>}
+ */
+/**
+ * Verifies a certificate by its hash against the certificate chain
+ * @param {string} hash - SHA-256 hash of the certificate to verify
+ * @param {Object} data - Object containing certificates and hash index
+ * @param {HTMLElement} el - Element to render results into
+ * @returns {Promise<void>}
+ */
 async function verifyHash(hash, data, el) {
   const clean = (hash || '').trim().toLowerCase();
   if (!clean) {
