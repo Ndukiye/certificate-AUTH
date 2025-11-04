@@ -1,0 +1,3 @@
+ID,RecipientName,CourseTitle,CompletionDate,Hash,Link,QR
+1,John Doe,Python Programming,2023-01-15,hash123,http://example.com/cert1,http://example.com/qr1
+2,Jane Smith,Web Development,2023-02-20,hash456,http://example.com/cert2,http://example.com/qr2

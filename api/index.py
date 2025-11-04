@@ -12,7 +12,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 's
 # Import your scripts
 import chain_certificates
 import generate_certificates_pdf
-import export_merge_rtf
+import export_merge_docx
 
 app = Flask(__name__, static_folder='../web', static_url_path='/', template_folder='../web')
 app.secret_key = 'your_very_secret_key_here' # Replace with a strong, random key in production
@@ -125,13 +125,13 @@ def regenerate_data():
         qr_dir = os.path.join(project_root, 'web', 'data', 'qrcodes')
 
         chain_certificates.main(
-            base_path=PROJECT_ROOT,
-            input_path=os.path.join(PROJECT_ROOT, 'data', 'Certificates.csv'),
-            output_path=os.path.join(PROJECT_ROOT, 'data', 'Certificates_Chained.csv'),
-            json_path=os.path.join(PROJECT_ROOT, 'web', 'data', 'certs.json'),
-            index_path=os.path.join(PROJECT_ROOT, 'web', 'data', 'hash_index.json'),
+            base_path=project_root,
+            input_path=os.path.join(project_root, 'data', 'Certificates.csv'),
+            output_path=os.path.join(project_root, 'data', 'Certificates_Chained.csv'),
+            json_path=os.path.join(project_root, 'web', 'data', 'certs.json'),
+            index_path=os.path.join(project_root, 'web', 'data', 'hash_index.json'),
             base_url=request.url_root.replace('http://', 'https://'),
-            qr_dir=os.path.join(PROJECT_ROOT, 'web', 'data', 'qrcodes'),
+            qr_dir=os.path.join(project_root, 'web', 'data', 'qrcodes'),
             qr_absolute=True # Ensure absolute paths for QR codes
         )
 
@@ -170,27 +170,32 @@ def regenerate_mail_merge():
     try:
         project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
         input_csv_path = os.path.join(project_root, 'data', 'Certificates_Chained.csv')
-        template_path = os.path.join(project_root, 'templates', 'certificate_template.rtf')
-        output_rtf_path = os.path.join(project_root, 'output', 'Certificates_Merged.rtf')
-        
-        export_merge_rtf.main(input_csv_path, template_path, output_rtf_path)
-        return jsonify({'message': 'Mail merge RTF regenerated successfully!'}), 200
+        template_path = os.path.join(project_root, 'templates', 'certificate_template.docx')
+        output_docx_path = os.path.join(project_root, 'output', 'Certificates_Merged.docx')
+        # Call the mail-merge script directly (original working behavior)
+        export_merge_docx.main(
+            input_csv_path=input_csv_path,
+            template_path=template_path,
+            output_docx_path=output_docx_path,
+            base_path=project_root
+        )
+        return jsonify({'message': 'Mail merge DOCX regenerated successfully!'}), 200
     except Exception as e:
         import traceback
-        app.logger.error("Error regenerating mail merge RTF: %s", traceback.format_exc())
-        return jsonify({'message': f'Error regenerating mail merge RTF: {str(e)}'}), 500
+        app.logger.error("Error regenerating mail merge DOCX: %s", traceback.format_exc())
+        return jsonify({'message': f'Error regenerating mail merge DOCX: {str(e)}'}), 500
 
 @app.route('/api/download-mail-merge')
 @login_required
 def download_mail_merge():
     try:
         project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-        rtf_path = os.path.join(project_root, 'output')
-        return send_from_directory(rtf_path, 'Certificates_Merged.rtf', as_attachment=True)
+        output_dir = os.path.join(project_root, 'output')
+        return send_from_directory(output_dir, 'Certificates_Merged.docx', as_attachment=True)
     except Exception as e:
         import traceback
-        app.logger.error("Error downloading mail merge RTF: %s", traceback.format_exc())
-        return jsonify({'message': f'Error downloading mail merge RTF: {str(e)}'}), 500
+        app.logger.error("Error downloading mail merge DOCX: %s", traceback.format_exc())
+        return jsonify({'message': f'Error downloading mail merge DOCX: {str(e)}'}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -59,8 +59,8 @@ Notes
 - Regenerate data with the Vercel URL so QR links and verification pages point correctly:
   - Example:
     - `python scripts/chain_certificates.py --input data/Certificates.csv --output data/Certificates_Chained.csv --json web/data/certs.json --index web/data/hash_index.json --base-url https://<your-project>.vercel.app/ --qr-dir data/qrcodes --qr-size 180 --add-qr-url --qr-absolute`
-  - Then rebuild the merged RTF:
-    - `python scripts/export_merge_rtf.py`
+  - Then rebuild the merged DOCX:
+    - `python scripts/export_merge_docx.py`
 - Notes:
   - `vercel.json` maps site root to `web/` so assets resolve at `/`.
   - For a custom domain, add it in the Vercel dashboard and re-run the chain script with that domain as `--base-url`.
@@ -81,7 +81,7 @@ Notes
 
 
 ### Ready-made Mail Merge Template
-- Template: `templates/certificate_template.rtf` (opens in Word; you can Save As `.docx`).
+- Template: `templates/certificate_template.docx`.
 - Usage:
   - Open the template in Word.
   - Go to `Mailings` > `Select Recipients` > `Use an Existing List...` and choose `data/Certificates_Chained.csv`.

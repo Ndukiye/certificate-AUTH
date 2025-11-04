@@ -6,8 +6,8 @@
     "DateIssued": "2025-10-18",
     "PreviousHash": "0000000000000000000000000000000000000000000000000000000000000000",
     "CurrentHash": "ec91a037557228db997fc2caccd65cfaff3261d51d3b02ef9f346167cbaed01c",
-    "VerificationURL": "http://localhost:5000/?hash=ec91a037557228db997fc2caccd65cfaff3261d51d3b02ef9f346167cbaed01c",
-    "QRCodeURL": "https://api.qrserver.com/v1/create-qr-code/?data=http%3A%2F%2Flocalhost%3A5000%2F%3Fhash%3Dec91a037557228db997fc2caccd65cfaff3261d51d3b02ef9f346167cbaed01c&size=180x180"
+    "VerificationURL": "https://localhost:5000/?hash=ec91a037557228db997fc2caccd65cfaff3261d51d3b02ef9f346167cbaed01c",
+    "QRCodePath": "C:\\Users\\oruka\\Documents\\Workspace\\jobs\\certificate-AUTH\\web\\data\\qrcodes\\001.png"
   },
   {
     "CertID": "002",
@@ -16,8 +16,8 @@
     "DateIssued": "2025-10-18",
     "PreviousHash": "ec91a037557228db997fc2caccd65cfaff3261d51d3b02ef9f346167cbaed01c",
     "CurrentHash": "f6cb0263d4dbc7e0d558e7eba9a7e5fb7401908d04913d269781e27c6361bf5a",
-    "VerificationURL": "http://localhost:5000/?hash=f6cb0263d4dbc7e0d558e7eba9a7e5fb7401908d04913d269781e27c6361bf5a",
-    "QRCodeURL": "https://api.qrserver.com/v1/create-qr-code/?data=http%3A%2F%2Flocalhost%3A5000%2F%3Fhash%3Df6cb0263d4dbc7e0d558e7eba9a7e5fb7401908d04913d269781e27c6361bf5a&size=180x180"
+    "VerificationURL": "https://localhost:5000/?hash=f6cb0263d4dbc7e0d558e7eba9a7e5fb7401908d04913d269781e27c6361bf5a",
+    "QRCodePath": "C:\\Users\\oruka\\Documents\\Workspace\\jobs\\certificate-AUTH\\web\\data\\qrcodes\\002.png"
   },
   {
     "CertID": "003",
@@ -26,8 +26,8 @@
     "DateIssued": "2025-10-18",
     "PreviousHash": "f6cb0263d4dbc7e0d558e7eba9a7e5fb7401908d04913d269781e27c6361bf5a",
     "CurrentHash": "13094a935df221ac927724152795f1ccef98a367b2876c0bae025e490ddc430a",
-    "VerificationURL": "http://localhost:5000/?hash=13094a935df221ac927724152795f1ccef98a367b2876c0bae025e490ddc430a",
-    "QRCodeURL": "https://api.qrserver.com/v1/create-qr-code/?data=http%3A%2F%2Flocalhost%3A5000%2F%3Fhash%3D13094a935df221ac927724152795f1ccef98a367b2876c0bae025e490ddc430a&size=180x180"
+    "VerificationURL": "https://localhost:5000/?hash=13094a935df221ac927724152795f1ccef98a367b2876c0bae025e490ddc430a",
+    "QRCodePath": "C:\\Users\\oruka\\Documents\\Workspace\\jobs\\certificate-AUTH\\web\\data\\qrcodes\\003.png"
   },
   {
     "CertID": "fced2805-28eb-49c8-ab5d-0237f6a8441f",
@@ -36,7 +36,17 @@
     "DateIssued": "2025-11-04",
     "PreviousHash": "13094a935df221ac927724152795f1ccef98a367b2876c0bae025e490ddc430a",
     "CurrentHash": "24a8df0851d6c23b12f9579f566f54950d2728f83002c03ccbd88ee3f8924260",
-    "VerificationURL": "http://localhost:5000/?hash=24a8df0851d6c23b12f9579f566f54950d2728f83002c03ccbd88ee3f8924260",
-    "QRCodeURL": "https://api.qrserver.com/v1/create-qr-code/?data=http%3A%2F%2Flocalhost%3A5000%2F%3Fhash%3D24a8df0851d6c23b12f9579f566f54950d2728f83002c03ccbd88ee3f8924260&size=180x180"
+    "VerificationURL": "https://localhost:5000/?hash=24a8df0851d6c23b12f9579f566f54950d2728f83002c03ccbd88ee3f8924260",
+    "QRCodePath": "C:\\Users\\oruka\\Documents\\Workspace\\jobs\\certificate-AUTH\\web\\data\\qrcodes\\fced2805-28eb-49c8-ab5d-0237f6a8441f.png"
+  },
+  {
+    "CertID": "a5104a88-dc4f-4137-a574-c08cb5ece0fc",
+    "RecipientName": "Daniel",
+    "CourseTitle": "Python 101",
+    "DateIssued": "2025-11-04",
+    "PreviousHash": "24a8df0851d6c23b12f9579f566f54950d2728f83002c03ccbd88ee3f8924260",
+    "CurrentHash": "267ee94c8cb9f50e70e07cd6febfaba276053738c618d16664ae4bdd3c1b6352",
+    "VerificationURL": "https://localhost:5000/?hash=267ee94c8cb9f50e70e07cd6febfaba276053738c618d16664ae4bdd3c1b6352",
+    "QRCodePath": "C:\\Users\\oruka\\Documents\\Workspace\\jobs\\certificate-AUTH\\web\\data\\qrcodes\\a5104a88-dc4f-4137-a574-c08cb5ece0fc.png"
   }
 ]

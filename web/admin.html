@@ -54,10 +54,10 @@
                     <i class="fas fa-file-pdf me-2"></i>Regenerate All Certificate PDFs
                 </button>
                 <button id="regenerateMailMergeBtn" class="btn btn-warning me-2">
-                    <i class="fas fa-file-word me-2"></i>Regenerate Mail Merge RTF
+                    <i class="fas fa-file-word me-2"></i>Regenerate Mail Merge DOCX
                 </button>
                 <button id="downloadMailMergeBtn" class="btn btn-info">
-                    <i class="fas fa-download me-2"></i>Download Mail Merge RTF
+                    <i class="fas fa-download me-2"></i>Download Mail Merge DOCX
                 </button>
                 <div id="adminMessage" class="mt-3"></div>
             </div>
@@ -154,7 +154,7 @@
             });
 
             regenerateMailMergeBtn.addEventListener('click', async () => {
-                showMessage('Regenerating mail merge RTF...', 'info');
+                showMessage('Regenerating mail merge DOCX...', 'info');
                 try {
                     const response = await fetch('/api/regenerate-mail-merge', { method: 'POST' });
                     const result = await response.json();

@@ -2,7 +2,7 @@ import os
 import sys
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-INPUT_RTF = os.path.join(PROJECT_ROOT, 'data', 'Certificates_Merged.rtf')
+INPUT_DOCX = os.path.join(PROJECT_ROOT, 'output', 'Certificates_Merged.docx')
 OUTPUT_PDF = os.path.join(PROJECT_ROOT, 'data', 'Certificates_Merged.pdf')
 
 
@@ -15,8 +15,8 @@ def main():
         print('pywin32 is not installed. Install with: python -m pip install pywin32', file=sys.stderr)
         sys.exit(2)
 
-    if not os.path.exists(INPUT_RTF):
-        print(f'Input RTF not found: {INPUT_RTF}', file=sys.stderr)
+    if not os.path.exists(INPUT_DOCX):
+        print(f'Input DOCX not found: {INPUT_DOCX}', file=sys.stderr)
         sys.exit(1)
 
     # Initialize COM and use early-bound Word
@@ -29,7 +29,7 @@ def main():
 
     doc = None
     try:
-        input_abs = os.path.abspath(INPUT_RTF)
+        input_abs = os.path.abspath(INPUT_DOCX)
         # Retry a few times to avoid callee rejection while Word initializes
         for attempt in range(3):
             try:
