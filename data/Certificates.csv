@@ -1,4 +1,6 @@
 CertID,RecipientName,CourseTitle,DateIssued,PreviousHash,CurrentHash
-001,Ada Lovelace,Intro to Cryptographic Linking,2025-10-18,0000000000000000000000000000000000000000000000000000000000000000,
-002,Alan Turing,Intro to Cryptographic Linking,2025-10-18,,
-003,Grace Hopper,Intro to Cryptographic Linking,2025-10-18,,
+001,B.J Fawei,Intro to Cryptographic Linking,2025-10-18,,
+002,Stephanie Kainga,Intro to Cryptographic Linking,2025-10-18,,
+003,Elon Musk,Intro to Cryptographic Linking,2025-10-18,,
+fced2805-28eb-49c8-ab5d-0237f6a8441f,nathaniel,Comp Sci. BSC,2025-11-04
+

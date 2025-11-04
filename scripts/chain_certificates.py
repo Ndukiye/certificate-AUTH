@@ -218,70 +218,105 @@ def chain_certificates(input_path, output_path, json_path=None, index_path=None,
             json.dump(index, inf, ensure_ascii=False, indent=2)
 
 
-def main():
+def main(base_path=None, input_path=None, output_path=None, json_path=None, index_path=None, base_url=None, qr_dir=None, qr_size=180, add_qr_url=False, qr_absolute=False):
     """
-    Command-line interface for the certificate chaining tool.
-    Parses arguments and calls the chain_certificates function.
+    Main function to chain certificates, callable with explicit arguments or via command-line.
+    
+    Args:
+        base_path: Optional base path to resolve PROJECT_ROOT for script execution context.
+        input_path: Path to input CSV with certificate data.
+        output_path: Path to save the chained certificate CSV.
+        json_path: Optional path to save JSON data for web verification.
+        index_path: Optional path to save hash lookup index.
+        base_url: Base URL for verification page (adds VerificationURL field).
+        qr_dir: Directory to save QR code images.
+        qr_size: Size of QR codes in pixels.
+        add_qr_url: Whether to include QR code URLs in output.
+        qr_absolute: Whether to use absolute paths for QR code files.
     """
-    parser = argparse.ArgumentParser(
-        description="Chain certificates by computing SHA-256 over normalized fields and previous hash"
-    )
-    # Required arguments
-    parser.add_argument("--input", required=True, help="Path to input CSV")
-    parser.add_argument(
-        "--output", required=True, help="Path to output chained CSV"
-    )
-    
-    # Web verification options
-    parser.add_argument(
-        "--json", required=False, help="Path to JSON export of records (for web verification)"
-    )
-    parser.add_argument(
-        "--index", required=False, help="Path to JSON hash index (hash -> row index)"
-    )
-    parser.add_argument(
-        "--base-url",
-        required=False,
-        help="Base URL for verification page; adds VerificationURL column as <base-url>/?hash=<CurrentHash>",
-    )
-    
-    # QR code options
-    parser.add_argument(
-        "--qr-dir",
-        required=False,
-        help="Directory to save QR PNGs per certificate (requires --base-url)",
-    )
-    parser.add_argument(
-        "--qr-size",
-        required=False,
-        type=int,
-        default=180,
-        help="Square size of QR code image in pixels (default: 180)",
-    )
-    parser.add_argument(
-        "--add-qr-url",
-        action="store_true",
-        help="Include QRCodeURL column pointing to an online QR image (requires --base-url)",
-    )
-    parser.add_argument(
-        "--qr-absolute",
-        action="store_true",
-        help="Store QRCodePath as an absolute path (recommended for Word Mail Merge)",
-    )
+    # Determine PROJECT_ROOT based on base_path or current script location
+    if base_path:
+        PROJECT_ROOT = base_path
+    else:
+        PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 
-    args = parser.parse_args()
+    # If arguments are not provided, parse from command line (for script execution)
+    if input_path is None or output_path is None:
+        parser = argparse.ArgumentParser(
+            description="Chain certificates by computing SHA-256 over normalized fields and previous hash"
+        )
+        # Required arguments
+        parser.add_argument("--input", required=True, help="Path to input CSV")
+        parser.add_argument(
+            "--output", required=True, help="Path to output chained CSV"
+        )
+        
+        # Web verification options
+        parser.add_argument(
+            "--json", required=False, help="Path to JSON export of records (for web verification)"
+        )
+        parser.add_argument(
+            "--index", required=False, help="Path to JSON hash index (hash -> row index)"
+        )
+        parser.add_argument(
+            "--base-url",
+            required=False,
+            help="Base URL for verification page; adds VerificationURL column as <base-url>/?hash=<CurrentHash>",
+        )
+        
+        # QR code options
+        parser.add_argument(
+            "--qr-dir",
+            required=False,
+            help="Directory to save QR PNGs per certificate (requires --base-url)",
+        )
+        parser.add_argument(
+            "--qr-size",
+            required=False,
+            type=int,
+            default=180,
+            help="Square size of QR code image in pixels (default: 180)",
+        )
+        parser.add_argument(
+            "--add-qr-url",
+            action="store_true",
+            help="Include QRCodeURL column pointing to an online QR image (requires --base-url)",
+        )
+        parser.add_argument(
+            "--qr-absolute",
+            action="store_true",
+            help="Store QRCodePath as an absolute path (recommended for Word Mail Merge)",
+        )
+
+        args = parser.parse_args()
+        input_path = args.input
+        output_path = args.output
+        json_path = args.json
+        index_path = args.index
+        base_url = args.base_url
+        qr_dir = args.qr_dir
+        qr_size = args.qr_size
+        add_qr_url = args.add_qr_url
+        qr_absolute = args.qr_absolute
+
+    # Define default paths relative to PROJECT_ROOT if not provided
+    if input_path is None: input_path = os.path.join(PROJECT_ROOT, 'data', 'Certificates.csv')
+    if output_path is None: output_path = os.path.join(PROJECT_ROOT, 'data', 'Certificates_Chained.csv')
+    if json_path is None: json_path = os.path.join(PROJECT_ROOT, 'web', 'data', 'certs.json')
+    if index_path is None: index_path = os.path.join(PROJECT_ROOT, 'web', 'data', 'hash_index.json')
+    if qr_dir is None: qr_dir = os.path.join(PROJECT_ROOT, 'web', 'data', 'qrcodes')
 
     # Process certificates with parsed arguments
     chain_certificates(
-        input_path=args.input,
-        output_path=args.output,
-        json_path=args.json,
-        index_path=args.index,
-        base_url=args.base_url,
-        qr_dir=args.qr_dir,
-        qr_size=args.qr_size,
-        add_qr_url=args.add_qr_url,
-        qr_absolute=args.qr_absolute,
+        input_path=input_path,
+        output_path=output_path,
+        json_path=json_path,
+        index_path=index_path,
+        base_url=base_url,
+        qr_dir=qr_dir,
+        qr_size=qr_size,
+        add_qr_url=add_qr_url,
+        qr_absolute=qr_absolute,
     )
 
 

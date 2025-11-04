@@ -1,6 +1,8 @@
 {
   "version": 2,
   "routes": [
+    { "src": "/api/(.*)", "dest": "/api/index.py" },
+    { "src": "/admin", "dest": "/api/index.py" },
     { "src": "/data/(.*)", "dest": "/web/data/$1" },
     { "src": "/(.*)", "dest": "/web/$1" }
   ]

@@ -16,16 +16,15 @@ import os
 import sys
 import json
 from datetime import datetime
-
-# Path configuration
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CERTS_JSON = os.path.join(PROJECT_ROOT, 'web', 'data', 'certs.json')
-OUTPUT_DIR = os.path.join(PROJECT_ROOT, 'web', 'data', 'certificates')
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.utils import ImageReader
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
 
 # PDF layout constants
 PAGE_WIDTH, PAGE_HEIGHT = 595.27, 841.89  # A4 points
 MARGIN = 48
-
 
 def load_certs(json_path):
     """
@@ -49,21 +48,15 @@ def load_certs(json_path):
         raise ValueError('certs.json must be a list of records')
     return data
 
-
-def draw_certificate(c, rec):
+def draw_certificate(c, rec, project_root):
     """
     Draw certificate content on the PDF canvas
     
     Args:
         c (Canvas): ReportLab canvas object to draw on
         rec (dict): Certificate record with recipient and course information
+        project_root (str): The root directory of the project to resolve QR code paths.
     """
-    from reportlab.lib import colors
-    from reportlab.lib.styles import getSampleStyleSheet
-    from reportlab.lib.utils import ImageReader
-    from reportlab.pdfgen import canvas
-    from reportlab.lib.units import inch
-
     # Header band - blue title bar
     c.setFillColorRGB(0.117, 0.227, 0.541)  # ~ var(--primary)
     c.rect(0, PAGE_HEIGHT - 80, PAGE_WIDTH, 80, fill=1, stroke=0)
@@ -97,7 +90,7 @@ def draw_certificate(c, rec):
     qr_path = rec.get('QRCodePath') or ''
     if qr_path:
         if not os.path.isabs(qr_path):
-            qr_path = os.path.join(PROJECT_ROOT, qr_path)
+            qr_path = os.path.join(project_root, qr_path)
         try:
             img = ImageReader(qr_path)
             c.drawImage(img, PAGE_WIDTH - MARGIN - 144, PAGE_HEIGHT - 144 - 80, width=144, height=144, preserveAspectRatio=True, mask='auto')
@@ -109,35 +102,46 @@ def draw_certificate(c, rec):
     c.setFont('Helvetica-Oblique', 10)
     c.drawString(MARGIN, MARGIN, 'This certificate is digitally signed and can be verified online using the link or QR code above.')
 
-
-def generate_all():
+def generate_all(base_path=None):
     """
     Main function to generate all certificate PDFs from certs.json
     
     Loads certificate data, creates output directory if needed,
     and generates individual PDF files for each certificate.
+
+    Args:
+        base_path: Optional base path to resolve PROJECT_ROOT for script execution context.
     """
     try:
         from reportlab.pdfgen import canvas
     except ImportError:
         raise ImportError('reportlab is not installed. Install with: python -m pip install reportlab')
 
+    # Path configuration
+    if base_path:
+        current_project_root = base_path
+    else:
+        current_project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+    certs_json_path = os.path.join(current_project_root, 'web', 'data', 'certs.json')
+    output_dir_path = os.path.join(current_project_root, 'web', 'data', 'certificates')
+
     # Load certificate data and ensure output directory exists
-    certs = load_certs(CERTS_JSON)
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    certs = load_certs(certs_json_path)
+    os.makedirs(output_dir_path, exist_ok=True)
 
     # Generate a PDF for each certificate
     count = 0
     for rec in certs:
         cid = str(rec.get('CertID') or '').strip() or 'certificate'
-        out_path = os.path.join(OUTPUT_DIR, f'{cid}.pdf')
+        out_path = os.path.join(output_dir_path, f'{cid}.pdf')
         c = canvas.Canvas(out_path, pagesize=(PAGE_WIDTH, PAGE_HEIGHT))
-        draw_certificate(c, rec)
+        draw_certificate(c, rec, current_project_root)
         c.showPage()
         c.save()
         print(f'Wrote: {out_path}')
         count += 1
-    print(f'Done. Wrote {count} certificate PDFs to: {OUTPUT_DIR}')
+    print(f'Done. Wrote {count} certificate PDFs to: {output_dir_path}')
 
 
 if __name__ == '__main__':
