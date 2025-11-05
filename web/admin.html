@@ -96,6 +96,19 @@
                 adminMessage.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
             }
 
+            function isJson(response) {
+                const ct = response.headers.get('content-type') || '';
+                return ct.includes('application/json');
+            }
+
+            async function readJsonOrText(response) {
+                if (isJson(response)) {
+                    try { return await response.json(); } catch (_) { /* fall through */ }
+                }
+                const text = await response.text();
+                return { message: text };
+            }
+
             async function loadCertificates() {
                 try {
                     const response = await fetch('/data/certs.json');
@@ -126,7 +139,7 @@
                 showMessage('Regenerating certificate data and QR codes...', 'info');
                 try {
                     const response = await fetch('/api/regenerate-data', { method: 'POST' });
-                    const result = await response.json();
+                    const result = await readJsonOrText(response);
                     if (response.ok) {
                         showMessage(result.message, 'success');
                         loadCertificates();
@@ -142,7 +155,7 @@
                 showMessage('Regenerating all certificate PDFs...', 'info');
                 try {
                     const response = await fetch('/api/regenerate-pdfs', { method: 'POST' });
-                    const result = await response.json();
+                    const result = await readJsonOrText(response);
                     if (response.ok) {
                         showMessage(result.message, 'success');
                     } else {
@@ -157,7 +170,7 @@
                 showMessage('Regenerating mail merge DOCX...', 'info');
                 try {
                     const response = await fetch('/api/regenerate-mail-merge', { method: 'POST' });
-                    const result = await response.json();
+                    const result = await readJsonOrText(response);
                     if (response.ok) {
                         showMessage(result.message, 'success');
                     } else {
@@ -189,7 +202,7 @@
                     body: JSON.stringify({ recipientName, courseTitle, dateIssued }),
                 });
 
-                    const result = await response.json();
+                    const result = await readJsonOrText(response);
                     if (response.ok) {
                         addCertMessage.innerHTML = `<div class="alert alert-success">${result.message}</div>`;
                         // Clear form fields

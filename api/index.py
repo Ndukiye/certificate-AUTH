@@ -17,10 +17,20 @@ import export_merge_docx
 app = Flask(__name__, static_folder='../web', static_url_path='/', template_folder='../web')
 app.secret_key = 'your_very_secret_key_here' # Replace with a strong, random key in production
 
+def _wants_json_response():
+    try:
+        accept = request.headers.get('Accept', '') or ''
+    except Exception:
+        accept = ''
+    # Treat any /api/* path or explicit JSON Accept header as API that expects JSON
+    return request.path.startswith('/api/') or ('application/json' in accept)
+
 def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if 'logged_in' not in session:
+            if _wants_json_response():
+                return jsonify({'status': 'unauthenticated', 'message': 'Login required'}), 401
             return redirect(url_for('login'))
         return view(**kwargs)
     return wrapped_view
