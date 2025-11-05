@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/api/index.py" },
-    { "src": "/admin", "dest": "/api/index.py" },
-    { "src": "/data/(.*)", "dest": "/web/data/$1" },
-    { "src": "/(.*)", "dest": "/web/$1" }
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "api/index.py" },
+    { "source": "/admin", "destination": "api/index.py" },
+    { "source": "/login", "destination": "api/index.py" },
+    { "source": "/data/(.*)", "destination": "web/data/$1" },
+    { "source": "/(.*)", "destination": "web/$1" }
   ]
 }
