@@ -1,3 +1,4 @@
+import logging
 from flask import Flask, render_template, send_from_directory, jsonify, request, session, redirect, url_for
 import os
 import subprocess
@@ -14,7 +15,12 @@ import chain_certificates
 import generate_certificates_pdf
 import export_merge_docx
 
+# Configure logging to output to stderr, which Vercel captures
+handler = logging.StreamHandler(sys.stderr)
+handler.setLevel(logging.INFO)
 app = Flask(__name__, static_folder='../web', static_url_path='/', template_folder='../web')
+app.logger.addHandler(handler)
+app.logger.setLevel(logging.INFO)
 app.secret_key = 'your_very_secret_key_here' # Replace with a strong, random key in production
 
 def _wants_json_response():
@@ -153,6 +159,7 @@ def regenerate_data():
 
 @app.route('/api/status')
 def api_status():
+    app.logger.info("API Status endpoint hit.")
     if 'logged_in' in session and session['logged_in']:
         return jsonify({'status': 'authenticated'}), 200
     else:
