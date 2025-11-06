@@ -9,9 +9,6 @@
   ],
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/index.py" },
-    { "source": "/admin", "destination": "/api/index.py" },
-    { "source": "/login", "destination": "/api/index.py" },
-    { "source": "/data/(.*)", "destination": "/web/data/$1" },
-    { "source": "/(.*)", "destination": "/web/$1" }
+    { "source": "/(.*)", "destination": "/api/index.py" }
   ]
 }
