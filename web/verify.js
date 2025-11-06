@@ -90,32 +90,20 @@ function formatHash(hash, visibleStart = 10, visibleEnd = 6) {
  * @returns {Promise<void>}
  */
 async function downloadCertificateById(certId) {
-  const fileName = certId ? `${certId}.pdf` : 'certificate.pdf';
-  const candidates = [
-    `data/certificates/${fileName}`
-  ];
-  
-  // Try to download the PDF file directly
-  for (const url of candidates) {
-    try {
-      const res = await fetch(url, { method: 'HEAD' });
-      if (res.ok) {
-        // Create and trigger a download link
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        return;
-      }
-    } catch (e) {
-      // ignore and continue to fallback
-    }
+  const safeId = encodeURIComponent(certId || '');
+  const apiUrl = `/api/download-certificate/${safeId}`;
+  try {
+    // Create and trigger a download link to the API endpoint
+    const a = document.createElement('a');
+    a.href = apiUrl;
+    a.download = '';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  } catch (e) {
+    // Fallback: print current result card as PDF if download fails
+    window.print();
   }
-  
-  // Fallback: print current result card as PDF
-  window.print();
 }
 
 function renderSuccess(el, rec, extraBlock = '') {

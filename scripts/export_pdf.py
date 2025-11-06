@@ -8,7 +8,7 @@ OUTPUT_PDF = os.path.join(PROJECT_ROOT, 'data', 'Certificates_Merged.pdf')
 
 def main():
     try:
-        from win32com.client import gencache
+        from win32com.client import Dispatch
         import pythoncom
         import time
     except ImportError:
@@ -21,7 +21,8 @@ def main():
 
     # Initialize COM and use early-bound Word
     pythoncom.CoInitialize()
-    word = gencache.EnsureDispatch('Word.Application')
+    # Use late-binding to avoid gencache issues with COM type libraries
+    word = Dispatch('Word.Application')
     word.Visible = False
     # 0 = wdAlertsNone
     word.DisplayAlerts = 0

@@ -242,6 +242,61 @@ def download_mail_merge():
         app.logger.error("Error downloading mail merge DOCX: %s", traceback.format_exc())
         return jsonify({'message': f'Error downloading mail merge DOCX: {str(e)}'}), 500
 
+# New endpoint: Download actual DOCX-merged certificate page as PDF by CertID
+@app.route('/api/download-certificate/<cert_id>', methods=['GET'])
+def download_certificate(cert_id):
+    try:
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        output_dir_path = os.path.join(project_root, 'web', 'data', 'certificates')
+        os.makedirs(output_dir_path, exist_ok=True)
+
+        # If a per-certificate PDF already exists, serve it
+        out_path = os.path.join(output_dir_path, f"{cert_id}.pdf")
+        if os.path.exists(out_path):
+            return send_from_directory(output_dir_path, f"{cert_id}.pdf", as_attachment=True)
+
+        # Attempt to build from merged DOCX -> merged PDF -> split per page
+        merged_docx = os.path.join(project_root, 'output', 'Certificates_Merged.docx')
+        merged_pdf = os.path.join(project_root, 'data', 'Certificates_Merged.pdf')
+        certs_json_path = os.path.join(project_root, 'web', 'data', 'certs.json')
+
+        # Validate inputs
+        if not os.path.exists(certs_json_path):
+            return jsonify({'message': 'certs.json not found'}), 404
+        if not os.path.exists(merged_docx):
+            return jsonify({'message': 'Merged DOCX not found. Please regenerate mail merge.'}), 404
+
+        # Export DOCX to PDF if needed (Windows-only via Word automation)
+        if not os.path.exists(merged_pdf):
+            try:
+                import sys as _sys
+                if _sys.platform == 'win32':
+                    import export_pdf  # uses pywin32 and Microsoft Word
+                    export_pdf.main()
+                else:
+                    return jsonify({'message': 'Merged PDF missing and automatic export requires Windows + Word. Please pre-generate locally and upload.'}), 500
+            except Exception as e:
+                app.logger.error('Failed to export merged DOCX to PDF: %s', e)
+                return jsonify({'message': 'Failed to export merged DOCX to PDF (Windows & Word required).'}), 500
+
+        # Split merged PDF into per-certificate PDFs
+        try:
+            import split_certificates_pdf
+            split_certificates_pdf.main()
+        except Exception as e:
+            app.logger.error('Failed to split merged PDF into certificate PDFs: %s', e)
+            return jsonify({'message': 'Failed to split merged PDF into certificate PDFs. Ensure merged PDF exists or pre-generate locally.'}), 500
+
+        # Serve if now present
+        if os.path.exists(out_path):
+            return send_from_directory(output_dir_path, f"{cert_id}.pdf", as_attachment=True)
+
+        return jsonify({'message': 'Certificate PDF not found after processing.'}), 404
+    except Exception as e:
+        import traceback
+        app.logger.error("Error generating/downloading certificate PDF: %s", traceback.format_exc())
+        return jsonify({'message': f'Error generating/downloading certificate PDF: {str(e)}'}), 500
+
 print("Flask app starting...")
 
 if __name__ == '__main__':
