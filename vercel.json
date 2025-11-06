@@ -4,7 +4,7 @@
     {
       "src": "api/index.py",
       "use": "@vercel/python",
-      "config": { "pythonPath": ".venv/Scripts/python.exe" }
+      "config": { "pythonPath": ".venv/bin/python" }
     }
   ],
   "rewrites": [
