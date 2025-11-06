@@ -20,6 +20,15 @@ app.logger.addHandler(handler)
 app.logger.setLevel(logging.INFO)
 app.secret_key = 'your_very_secret_key_here' # Replace with a strong, random key in production
 
+# Log any unhandled exceptions to stderr so Vercel surfaces stack traces
+@app.errorhandler(Exception)
+def handle_unhandled_exception(e):
+    import traceback
+    app.logger.error("Unhandled exception: %s", traceback.format_exc())
+    if _wants_json_response():
+        return jsonify({ 'message': 'Internal Server Error' }), 500
+    return "Internal Server Error", 500
+
 def _wants_json_response():
     try:
         accept = request.headers.get('Accept', '') or ''
@@ -41,6 +50,20 @@ def login_required(view):
 @app.route('/')
 def serve_index():
     return send_from_directory(app.static_folder, 'index.html')
+
+@app.route('/favicon.ico')
+def serve_favicon_ico():
+    ico_path = os.path.join(app.static_folder, 'favicon.ico')
+    if os.path.exists(ico_path):
+        return send_from_directory(app.static_folder, 'favicon.ico')
+    return ('', 204)
+
+@app.route('/favicon.png')
+def serve_favicon_png():
+    png_path = os.path.join(app.static_folder, 'favicon.png')
+    if os.path.exists(png_path):
+        return send_from_directory(app.static_folder, 'favicon.png')
+    return ('', 204)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

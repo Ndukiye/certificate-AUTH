@@ -4,7 +4,15 @@
     {
       "src": "api/index.py",
       "use": "@vercel/python",
-      "config": { "pythonPath": ".venv/bin/python" }
+      "config": {
+        "includeFiles": [
+          "web/**",
+          "data/**",
+          "templates/**",
+          "output/**",
+          "scripts/**"
+        ]
+      }
     }
   ],
   "rewrites": [
