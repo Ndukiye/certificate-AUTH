@@ -214,5 +214,7 @@ def download_mail_merge():
         app.logger.error("Error downloading mail merge DOCX: %s", traceback.format_exc())
         return jsonify({'message': f'Error downloading mail merge DOCX: {str(e)}'}), 500
 
+print("Flask app starting...")
+
 if __name__ == '__main__':
     app.run(debug=True)
