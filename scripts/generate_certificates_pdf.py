@@ -16,11 +16,6 @@ import os
 import sys
 import json
 from datetime import datetime
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.lib.utils import ImageReader
-from reportlab.pdfgen import canvas
-from reportlab.lib.units import inch
 
 # PDF layout constants
 PAGE_WIDTH, PAGE_HEIGHT = 595.27, 841.89  # A4 points
@@ -92,6 +87,8 @@ def draw_certificate(c, rec, project_root):
         if not os.path.isabs(qr_path):
             qr_path = os.path.join(project_root, qr_path)
         try:
+            # Lazy import to avoid import-time failures if ReportLab isn't installed
+            from reportlab.lib.utils import ImageReader
             img = ImageReader(qr_path)
             c.drawImage(img, PAGE_WIDTH - MARGIN - 144, PAGE_HEIGHT - 144 - 80, width=144, height=144, preserveAspectRatio=True, mask='auto')
         except Exception:

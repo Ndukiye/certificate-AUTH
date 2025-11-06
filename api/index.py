@@ -10,10 +10,7 @@ import functools
 # Add the scripts directory to the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'scripts')))
 
-# Import your scripts
-import chain_certificates
-import generate_certificates_pdf
-import export_merge_docx
+# Defer importing heavy scripts until needed inside routes
 
 # Configure logging to output to stderr, which Vercel captures
 handler = logging.StreamHandler(sys.stderr)
@@ -70,6 +67,8 @@ def serve_certs_json():
 @login_required
 def add_certificate():
     try:
+        # Lazy import to avoid startup failures if dependencies are missing
+        import chain_certificates
         data = request.json
         # Generate a unique CertID (e.g., using a timestamp or UUID)
         cert_id = str(uuid.uuid4()) # Using UUID for uniqueness
@@ -127,6 +126,8 @@ def add_certificate():
 @login_required
 def regenerate_data():
     try:
+        # Lazy import to avoid startup failures if dependencies are missing
+        import chain_certificates
         # Assuming the Vercel domain is passed or configured
         # For now, let's use a placeholder or retrieve from environment
         # In a real Vercel deployment, you'd get this from an env var
@@ -174,6 +175,8 @@ def logout():
 @login_required
 def regenerate_pdfs():
     try:
+        # Lazy import to avoid startup failures if dependencies are missing
+        import generate_certificates_pdf
         # Call the generate_certificates_pdf script
         # subprocess.run([sys.executable, os.path.join(app.root_path, '..', 'scripts', 'generate_certificates_pdf.py')], check=True)
         generate_certificates_pdf.generate_all()
@@ -185,6 +188,8 @@ def regenerate_pdfs():
 @login_required
 def regenerate_mail_merge():
     try:
+        # Lazy import to avoid startup failures if dependencies are missing
+        import export_merge_docx
         project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
         input_csv_path = os.path.join(project_root, 'data', 'Certificates_Chained.csv')
         template_path = os.path.join(project_root, 'templates', 'certificate_template.docx')
