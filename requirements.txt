@@ -3,3 +3,4 @@ docx-mailmerge
 python-docx
 lxml
 reportlab
+gunicorn
